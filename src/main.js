@@ -38,7 +38,7 @@ const renderTask = (taskListElement, task) => {
 
   editButton.addEventListener(`click`, () => {
     replaceTaskToEdit();
-    document.addEventListener(`keydown`, onEscKeyDown)
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   const taskEditComponent = new TaskEditComponent(task);
@@ -49,23 +49,14 @@ const renderTask = (taskListElement, task) => {
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const siteMainElement = document.querySelector(`.main`);
-const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const renderBoard = (boardComponent, tasks) => {
+  const isAllTasksArchived = tasks.every((task) => task.isArchive);
 
-render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+  if (isAllTasksArchived) {
+    render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
 
-const filters = generateFilters();
-render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
-
-const boardComponent = new BoardComponent();
-render(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
-
-const tasks = generateTasks(TASK_COUNT);
-const isAllTasksArchived = tasks.every((task) => task.isArchive);
-
-if (isAllTasksArchived) {
-  render(boardComponent.getElement(), new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
-} else {
   render(boardComponent.getElement(), new SortComponent().getElement(), RenderPosition.BEFOREEND);
   render(boardComponent.getElement(), new TasksComponent().getElement(), RenderPosition.BEFOREEND);
 
@@ -92,4 +83,19 @@ if (isAllTasksArchived) {
       loadMoreButtonComponent.removeElement();
     }
   });
-}
+};
+
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+
+render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
+
+const filters = generateFilters();
+render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent.getElement(), RenderPosition.BEFOREEND);
+
+const tasks = generateTasks(TASK_COUNT);
+
+renderBoard(boardComponent, tasks);
