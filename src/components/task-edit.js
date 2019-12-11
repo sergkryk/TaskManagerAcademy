@@ -85,7 +85,7 @@ const createTaskEditTemplate = (task, options = {}) => {
     (isRepeatingTask && !isRepeating(activeRepeatingDays));
 
   const date = (isDateShowing && dueDate) ? formatDate(dueDate) : ``;
-  const time = (isDateShowing && dueDate) ? formatTime(dueDate): ``;
+  const time = (isDateShowing && dueDate) ? formatTime(dueDate) : ``;
 
   const repeatClass = isRepeatingTask ? `card--repeat` : ``;
   const deadlineClass = isExpired ? `card--deadline` : ``;
@@ -121,9 +121,8 @@ const createTaskEditTemplate = (task, options = {}) => {
                     date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                   </button>
 
-                  ${
-                      isDateShowing ?
-                      `<fieldset class="card__date-deadline">
+                  ${isDateShowing ? `
+                      <fieldset class="card__date-deadline">
                         <label class="card__input-deadline-wrap">
                           <input
                             class="card__date"
@@ -133,23 +132,18 @@ const createTaskEditTemplate = (task, options = {}) => {
                             value="${date} ${time}"
                           />
                         </label>
-                      </fieldset>`
-                      : ``
-                    }
+                      </fieldset>` : ``}
 
                   <button class="card__repeat-toggle" type="button">
                     repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                   </button>
 
-                  ${
-                    isRepeatingTask ?
-                    `<fieldset class="card__repeat-days">
+                  ${isRepeatingTask ? `
+                    <fieldset class="card__repeat-days">
                       <div class="card__repeat-days-inner">
                         ${repeatingDaysMarkup}
                       </div>
-                    </fieldset>`
-                    : ``
-                  }
+                    </fieldset>` : ``}
                 </div>
 
                 <div class="card__hashtag">
@@ -233,7 +227,7 @@ export default class TaskEdit extends AbstractSmartComponent {
       .addEventListener(`submit`, handler);
   }
 
- _applyFlatpickr() {
+  _applyFlatpickr() {
     if (this._flatpickr) {
       // При своем создании `flatpickr` дополнительно создает вспомогательные DOM-элементы.
       // Что бы их удалять, нужно вызывать метод `destroy` у созданного инстанса `flatpickr`.
