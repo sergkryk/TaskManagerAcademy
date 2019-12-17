@@ -121,8 +121,9 @@ const createTaskEditTemplate = (task, options = {}) => {
                     date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                   </button>
 
-                  ${isDateShowing ? `
-                      <fieldset class="card__date-deadline">
+                  ${
+    isDateShowing ?
+      `<fieldset class="card__date-deadline">
                         <label class="card__input-deadline-wrap">
                           <input
                             class="card__date"
@@ -132,18 +133,23 @@ const createTaskEditTemplate = (task, options = {}) => {
                             value="${date} ${time}"
                           />
                         </label>
-                      </fieldset>` : ``}
+                      </fieldset>`
+      : ``
+    }
 
                   <button class="card__repeat-toggle" type="button">
                     repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                   </button>
 
-                  ${isRepeatingTask ? `
-                    <fieldset class="card__repeat-days">
+                  ${
+    isRepeatingTask ?
+      `<fieldset class="card__repeat-days">
                       <div class="card__repeat-days-inner">
                         ${repeatingDaysMarkup}
                       </div>
-                    </fieldset>` : ``}
+                    </fieldset>`
+      : ``
+    }
                 </div>
 
                 <div class="card__hashtag">
@@ -189,6 +195,7 @@ export default class TaskEdit extends AbstractSmartComponent {
     this._isRepeatingTask = Object.values(task.repeatingDays).some(Boolean);
     this._activeRepeatingDays = Object.assign({}, task.repeatingDays);
     this._flatpickr = null;
+    this._submitHandler = null;
 
     this._applyFlatpickr();
     this._subscribeOnEvents();
@@ -203,6 +210,7 @@ export default class TaskEdit extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
     this._subscribeOnEvents();
   }
 
@@ -225,6 +233,8 @@ export default class TaskEdit extends AbstractSmartComponent {
   setSubmitHandler(handler) {
     this.getElement().querySelector(`form`)
       .addEventListener(`submit`, handler);
+
+    this._submitHandler = handler;
   }
 
   _applyFlatpickr() {
