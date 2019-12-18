@@ -1,7 +1,7 @@
 import TaskComponent from '../components/task.js';
 import TaskEditComponent from '../components/task-edit.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
-import {COLOR} from '../const.js';
+import {COLOR, DAYS} from '../const.js';
 
 export const Mode = {
   ADDING: `adding`,
@@ -26,6 +26,28 @@ export const EmptyTask = {
   isFavorite: false,
   isArchive: false,
 };
+
+const parseFormData = (formData) => {
+  const date = formData.get(`date`);
+  const repeatingDays = DAYS.reduce((acc, day) => {
+    acc[day] = false;
+    return acc;
+  }, {});
+
+  return new TaskModel({
+    'description': formData.get(`text`),
+    'due_date': date ? new Date(date) : null,
+    'tags': formData.getAll(`hashtag`),
+    'repeating_days': formData.getAll(`repeat`).reduce((acc, it) => {
+      acc[it] = true;
+      return acc;
+    }, repeatingDays),
+    'color': formData.get(`color`),
+    'is_favorite': false,
+    'is_done': false,
+  });
+};
+
 
 export default class TaskController {
   constructor(container, onDataChange, onViewChange) {
