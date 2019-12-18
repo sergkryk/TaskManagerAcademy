@@ -1,3 +1,4 @@
+import API from './api.js';
 import BoardComponent from './components/board.js';
 import BoardController from './controllers/board.js';
 import FilterController from './controllers/filter.js';
@@ -18,6 +19,7 @@ const dateFrom = (() => {
   d.setDate(d.getDate() - 7);
   return d;
 })();
+const api = new API(END_POINT, AUTHORIZATION);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const siteMenuComponent = new SiteMenuComponent();
