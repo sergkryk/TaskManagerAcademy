@@ -1,3 +1,5 @@
+import Task from './models/task.js';
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
