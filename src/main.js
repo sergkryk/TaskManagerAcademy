@@ -10,30 +10,29 @@ import {render, RenderPosition} from './utils/render.js';
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
 
-render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
-const tasksModel = new TasksModel();
-
 const dateTo = new Date();
 const dateFrom = (() => {
   const d = new Date(dateTo);
   d.setDate(d.getDate() - 7);
   return d;
 })();
+
 const api = new API(END_POINT, AUTHORIZATION);
+const tasksModel = new TasksModel();
+
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const siteMenuComponent = new SiteMenuComponent();
 const statisticsComponent = new StatisticsComponent({tasks: tasksModel, dateFrom, dateTo});
 
-const filterController = new FilterController(siteMainElement, tasksModel);
-filterController.render();
-
 const boardComponent = new BoardComponent();
+const boardController = new BoardController(boardComponent, tasksModel);
+const filterController = new FilterController(siteMainElement, tasksModel);
+
+render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
+filterController.render();
 render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-
-const boardController = new BoardController(boardComponent, tasksModel);
-
 statisticsComponent.hide();
 boardController.render();
 
