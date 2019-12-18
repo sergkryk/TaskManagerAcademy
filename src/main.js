@@ -4,19 +4,14 @@ import FilterController from './controllers/filter.js';
 import SiteMenuComponent, {MenuItem} from './components/site-menu.js';
 import StatisticsComponent from './components/statistics.js';
 import TasksModel from './models/tasks.js';
-import {generateTasks} from './mock/task.js';
 import {render, RenderPosition} from './utils/render.js';
-
-const TASK_COUNT = 22;
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 const siteMenuComponent = new SiteMenuComponent();
 
 render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
-const tasks = generateTasks(TASK_COUNT);
 const tasksModel = new TasksModel();
-tasksModel.setTasks(tasks);
 
 const dateTo = new Date();
 const dateFrom = (() => {
