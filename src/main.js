@@ -34,7 +34,6 @@ filterController.render();
 render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
 statisticsComponent.hide();
-boardController.render();
 
 siteMenuComponent.setOnChange((menuItem) => {
   switch (menuItem) {
@@ -54,3 +53,9 @@ siteMenuComponent.setOnChange((menuItem) => {
       break;
   }
 });
+
+api.getTasks()
+  .then((tasks) => {
+    tasksModel.setTasks(tasks);
+    boardController.render();
+  });
