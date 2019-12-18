@@ -59,6 +59,11 @@ const calculateBetweenDates = (from, to) => {
 
   return result;
 };
+
+const renderColorsChart = (colorsCtx, tasks) => {
+
+};
+
 const createStatisticsTemplate = ({tasks, dateFrom, dateTo}) => {
   const placeholder = createPlaceholder(dateFrom, dateTo);
   const tasksCount = getTasksByDateRange(tasks, dateFrom, dateTo).length;
