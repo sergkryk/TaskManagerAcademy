@@ -6,9 +6,8 @@ import StatisticsComponent from './components/statistics.js';
 import TasksModel from './models/tasks.js';
 import {render, RenderPosition} from './utils/render.js';
 
-const siteMainElement = document.querySelector(`.main`);
-const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-const siteMenuComponent = new SiteMenuComponent();
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
 
 render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
 const tasksModel = new TasksModel();
@@ -19,6 +18,9 @@ const dateFrom = (() => {
   d.setDate(d.getDate() - 7);
   return d;
 })();
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const siteMenuComponent = new SiteMenuComponent();
 const statisticsComponent = new StatisticsComponent({tasks: tasksModel, dateFrom, dateTo});
 
 const filterController = new FilterController(siteMainElement, tasksModel);
