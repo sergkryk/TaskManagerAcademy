@@ -43,4 +43,12 @@ export default class SiteMenu extends AbstractComponent {
   getTemplate() {
     return createSiteMenuTemplate();
   }
+
+  setActiveItem(menuItem) {
+    const item = this.getElement().querySelector(`#${menuItem}`);
+
+    if (item) {
+      item.checked = true;
+    }
+  }
 }
