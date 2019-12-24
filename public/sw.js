@@ -30,4 +30,29 @@ self.addEventListener(`install`, (evt) => {
 self.addEventListener(`activate`, (evt) => {
 });
 
-self.addEventListener(`fetch`, (evt) => {});
+const fetchHandler = (evt) => {
+  const {request} = evt;
+
+  evt.respondWith(
+      caches.match(request)
+        .then((cacheResponse) => {
+          // Если в кэше нашёлся ответ на запрос (request),
+          // возвращаем его (cacheResponse) вместо запроса к серверу
+          if (cacheResponse) {
+            return cacheResponse;
+          }
+
+          // Если в кэше не нашёлся ответ,
+          // повторно вызываем fetch
+          // с тем же запросом (request),
+          // и возвращаем его
+          return fetch(request).then(
+              (response) => {
+                return response;
+              }
+          );
+        })
+  );
+};
+
+self.addEventListener(`fetch`, fetchHandler);
