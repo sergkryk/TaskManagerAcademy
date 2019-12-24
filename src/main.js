@@ -6,6 +6,7 @@ import SiteMenuComponent, {MenuItem} from './components/site-menu.js';
 import StatisticsComponent from './components/statistics.js';
 import TasksModel from './models/tasks.js';
 import {render, RenderPosition} from './utils/render.js';
+import 'flatpickr/dist/flatpickr.css';
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
