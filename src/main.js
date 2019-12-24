@@ -79,6 +79,16 @@ apiWithProvider.getTasks()
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
+
+  if (!apiWithProvider.getSynchronize()) {
+    apiWithProvider.sync()
+      .then(() => {
+        // Действие, в случае успешной синхронизации
+      })
+      .catch(() => {
+        // Действие, в случае ошибки синхронизации
+      });
+  }
 });
 
 window.addEventListener(`offline`, () => {
