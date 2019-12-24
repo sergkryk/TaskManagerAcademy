@@ -1,4 +1,4 @@
-import API from './api.js';
+import Api from './api/index.js';
 import BoardComponent from './components/board.js';
 import BoardController from './controllers/board.js';
 import FilterController from './controllers/filter.js';
@@ -27,7 +27,7 @@ const dateFrom = (() => {
   return d;
 })();
 
-const api = new API(END_POINT, AUTHORIZATION);
+const api = new Api(END_POINT, AUTHORIZATION);
 const tasksModel = new TasksModel();
 
 const siteMainElement = document.querySelector(`.main`);
