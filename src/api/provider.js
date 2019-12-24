@@ -5,6 +5,7 @@ export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
+    this._isSynchronized = true;
   }
 
   getTasks() {
@@ -18,6 +19,8 @@ export default class Provider {
     }
 
     const storeTasks = Object.values(this._store.getAll());
+
+    this._isSynchronized = false;
 
     return Promise.resolve(Task.parseTasks(storeTasks));
   }
@@ -37,6 +40,7 @@ export default class Provider {
     const fakeNewTaskId = nanoid();
     const fakeNewTask = Task.parseTask(Object.assign({}, task.toRAW(), {id: fakeNewTaskId}));
 
+    this._isSynchronized = false;
     this._store.setItem(fakeNewTask.id, Object.assign({}, fakeNewTask.toRAW(), {offline: true}));
 
     return Promise.resolve(fakeNewTask);
@@ -54,6 +58,7 @@ export default class Provider {
 
     const fakeUpdatedTask = Task.parseTask(Object.assign({}, task.toRAW(), {id}));
 
+    this._isSynchronized = false;
     this._store.setItem(id, Object.assign({}, fakeUpdatedTask.toRAW(), {offline: true}));
 
     return Promise.resolve(fakeUpdatedTask);
@@ -68,9 +73,14 @@ export default class Provider {
       );
     }
 
+    this._isSynchronized = false;
     this._store.removeItem(id);
 
     return Promise.resolve();
+  }
+
+  getSynchronize() {
+    return this._isSynchronized;
   }
 
   _isOnLine() {
