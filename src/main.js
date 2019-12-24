@@ -76,3 +76,11 @@ apiWithProvider.getTasks()
     tasksModel.setTasks(tasks);
     boardController.render();
   });
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});
