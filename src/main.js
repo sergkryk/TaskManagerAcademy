@@ -1,4 +1,6 @@
 import Api from './api/index.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 import BoardComponent from './components/board.js';
 import BoardController from './controllers/board.js';
 import FilterController from './controllers/filter.js';
@@ -8,6 +10,9 @@ import TasksModel from './models/tasks.js';
 import {render, RenderPosition} from './utils/render.js';
 import 'flatpickr/dist/flatpickr.css';
 
+const STORE_PREFIX = `taskmanager-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/task-manager`;
 
@@ -28,6 +33,8 @@ const dateFrom = (() => {
 })();
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const tasksModel = new TasksModel();
 
 const siteMainElement = document.querySelector(`.main`);
