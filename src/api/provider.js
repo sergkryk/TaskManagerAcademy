@@ -9,15 +9,27 @@ export default class Provider {
 
   getTasks() {
     if (this._isOnLine()) {
-      return this._api.getTasks();
+      return this._api.getTasks().then(
+          (tasks) => {
+            tasks.forEach((task) => this._store.setItem(task.id, task.toRAW()));
+            return tasks;
+          }
+      );
     }
 
-    return Promise.resolve(Task.parseTasks([]));
+    const storeTasks = Object.values(this._store.getAll());
+
+    return Promise.resolve(Task.parseTasks(storeTasks));
   }
 
   createTask(task) {
     if (this._isOnLine()) {
-      return this._api.createTask(task);
+      return this._api.createTask(task).then(
+          (newTask) => {
+            this._store.setItem(newTask.id, newTask.toRAW());
+            return newTask;
+          }
+      );
     }
 
     // Нюанс в том, что при создании мы не указываем id задачи, нам его в ответе присылает сервер.
@@ -25,21 +37,38 @@ export default class Provider {
     const fakeNewTaskId = nanoid();
     const fakeNewTask = Task.parseTask(Object.assign({}, task.toRAW(), {id: fakeNewTaskId}));
 
+    this._store.setItem(fakeNewTask.id, Object.assign({}, fakeNewTask.toRAW(), {offline: true}));
+
     return Promise.resolve(fakeNewTask);
   }
 
   updateTask(id, task) {
     if (this._isOnLine()) {
-      return this._api.updateTask(id, task);
+      return this._api.updateTask(id, task).then(
+          (newTask) => {
+            this._store.setItem(newTask.id, newTask.toRAW());
+            return newTask;
+          }
+      );
     }
 
-    return Promise.resolve(task);
+    const fakeUpdatedTask = Task.parseTask(Object.assign({}, task.toRAW(), {id}));
+
+    this._store.setItem(id, Object.assign({}, fakeUpdatedTask.toRAW(), {offline: true}));
+
+    return Promise.resolve(fakeUpdatedTask);
   }
 
   deleteTask(id) {
     if (this._isOnLine()) {
-      return this._api.deleteTask(id);
+      return this._api.deleteTask(id).then(
+          () => {
+            this._store.removeItem(id);
+          }
+      );
     }
+
+    this._store.removeItem(id);
 
     return Promise.resolve();
   }
