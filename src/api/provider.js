@@ -1,6 +1,9 @@
 import nanoid from "nanoid";
 import Task from "../models/task";
 
+const getSyncedTasks =
+  (items) => items.filter(({success}) => success).map(({payload}) => payload.task);
+
 export default class Provider {
   constructor(api, store) {
     this._api = api;
@@ -77,6 +80,35 @@ export default class Provider {
     this._store.removeItem(id);
 
     return Promise.resolve();
+  }
+
+  sync() {
+    const storeTasks = Object.values(this._store.getAll());
+
+    return this._api.sync(storeTasks)
+      .then((response) => {
+        // Удаляем из хранилища задачи, что были созданы
+        // или изменены в оффлайне. Они нам больше не нужны
+        storeTasks.filter((task) => task.offline).forEach((task) => {
+          this._store.removeItem(task.id);
+        });
+
+        // Забираем из ответа синхронизированные задачи
+        const createdTasks = getSyncedTasks(response.created);
+        const updatedTasks = getSyncedTasks(response.updated);
+
+        // Добавляем синхронизированные задачи в хранилище.
+        // Хранилище должно быть актуальным в любой момент,
+        // вдруг сеть пропадёт
+        [...createdTasks, ...updatedTasks].forEach((task) => {
+          this._store.setItem(task.id, task);
+        });
+
+        // Помечаем, что всё синхронизировано
+        this._isSynchronized = true;
+
+        return Promise.resolve();
+      });
   }
 
   getSynchronize() {
