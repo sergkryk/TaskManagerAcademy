@@ -43,7 +43,7 @@ const siteMenuComponent = new SiteMenuComponent();
 const statisticsComponent = new StatisticsComponent({tasks: tasksModel, dateFrom, dateTo});
 
 const boardComponent = new BoardComponent();
-const boardController = new BoardController(boardComponent, tasksModel, api);
+const boardController = new BoardController(boardComponent, tasksModel, apiWithProvider);
 const filterController = new FilterController(siteMainElement, tasksModel);
 
 render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
@@ -71,7 +71,7 @@ siteMenuComponent.setOnChange((menuItem) => {
   }
 });
 
-api.getTasks()
+apiWithProvider.getTasks()
   .then((tasks) => {
     tasksModel.setTasks(tasks);
     boardController.render();
